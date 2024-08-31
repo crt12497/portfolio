@@ -15,8 +15,7 @@ $(document).ready(function () {
     }
   });
 
-  // smooth scrolling
-
+  // Smooth scrolling
   $('a[href*="#"]').on("click", function (e) {
     e.preventDefault();
 
@@ -30,26 +29,33 @@ $(document).ready(function () {
   });
 });
 
-// conneting to the mail
+// Handling form submission and sending email
 var form = document.getElementById("my-form");
 
 async function handleSubmit(event) {
   event.preventDefault();
   var status = document.getElementById("my-form-status");
   var data = new FormData(event.target);
-  fetch(event.target.action, {
-    method: form.method,
-    body: data,
-    headers: {
-      Accept: "application/json",
-    },
-  })
-    .then((response) => {
+
+  try {
+    let response = await fetch(event.target.action, {
+      method: form.method,
+      body: data,
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (response.ok) {
       status.innerHTML = "Thanks for your submission!";
       form.reset();
-    })
-    .catch((error) => {
+    } else {
       status.innerHTML = "Oops! There was a problem submitting your form";
-    });
+    }
+  } catch (error) {
+    status.innerHTML = "Oops! There was a problem submitting your form";
+    console.error("Error:", error);
+  }
 }
+
 form.addEventListener("submit", handleSubmit);
